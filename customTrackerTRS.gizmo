@@ -1,0 +1,25 @@
+set cut_paste_input [stack 0]
+version 10.0 v5
+push $cut_paste_input
+Tracker4 {
+cornerPinOptions "Transform (match-move, baked)"
+adjust_for_luminance_changes true
+hide_progress_bar true
+center {320 240}
+shutteroffset centred
+name Tracker1
+label "Motion: \[value transform]\nRef Frame: \[value reference_frame]"
+selected true
+xpos -264
+ypos -145
+addUserKnob {20 trsSelect l "TRS Select"}
+addUserKnob {6 t l T -STARTLINE}
+t true
+addUserKnob {6 r l R -STARTLINE}
+r true
+addUserKnob {6 s l S -STARTLINE}
+s true
+addUserKnob {22 update l Update! T "# --------------------------------------------------------------\n#  updateTrackerTRS.py\n#  Version: 1.1.0\n#  Last Updated: September 5th, 2019\n# --------------------------------------------------------------\n\nimport nuke\nimport re\nimport nukescripts\n\ndef update_tracker_TRS(trans, rot, scale):\n\n\t# get the current node context\n\tnode = nuke.thisNode()\n\n\t# set a variable for the 'Tracks' knob\n\ttrack_list = node\['tracks']\n\n\t# filter Tracks knob to find the number of tracks\n\titems = re.findall('\{ \[0-9, ]*\}', track_list.toScript())\[0]\n\tnum_tracks = int(items.split(' ')\[-2])\n\t\n\t# go through all trackers and change their values\n\tfor i in range(0, num_tracks):\n\t\ttrack_list.setValue(trans, 31*i+6)\n\t\ttrack_list.setValue(rot,   31*i+7)\n\t\ttrack_list.setValue(scale, 31*i+8)\n\nthis_node = nuke.thisNode()\nupdate_tracker_TRS(this_node\['t'].getValue(), this_node\['r'].getValue(), this_node\['s'].getValue())" +STARTLINE}
+addUserKnob {26 tooltip l "" +STARTLINE T "This tool will let the user quickly adjsut TRS checkboxes for all tracks simultaneously.\nStart by selecting the translate, rotate and, scale boxes you want to have checked, then press 'Update!'."}
+}
+
